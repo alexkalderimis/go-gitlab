@@ -1,0 +1,33 @@
+cache:
+  paths:
+    - /apt-cache
+    - /go/src/github.com
+    - /go/src/golang.org
+    - /go/src/google.golang.org
+    - /go/src/gopkg.in
+
+before_script:
+  - apt-get install git
+  - go get golang.org/x/lint/golint
+
+.tests: &tests
+  script:
+      - golint -set_exit_status
+      - go vet -v
+      - go test -v
+
+go_1_12:
+  <<: [*tests]
+  image: golang:1.12
+
+go_1_11:
+  <<: [*tests]
+  image: golang:1.11
+
+go_latest:
+  <<: [*tests]
+  image: golang:latest
+
+go_rc:
+  <<: [*tests]
+  image: golang:rc
